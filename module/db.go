@@ -29,11 +29,16 @@ func init() {
 	}
 
 	second := os.Getenv(config.WAIT_MYSQL_SETUP_SECOND)
-	isecond, err := strconv.Atoi(second)
-	if err != nil {
-		log.Info("等待mysql初始化异常", err)
-		os.Exit(0)
+	var isecond int = 10
+	var err error
+	if second != "" {
+		isecond, err = strconv.Atoi(second)
+		if err != nil {
+			log.Info("等待mysql初始化异常", err)
+			os.Exit(0)
+		}
 	}
+
 	log.Infof("等待[%s]秒后准备初始化数据库表", isecond)
 	time.Sleep(time.Second * time.Duration(isecond))
 	ds := user + ":" + password + "@tcp(" + host + ")/" + dbName + "?charset=utf8mb4&loc=Local"
