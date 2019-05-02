@@ -13,6 +13,7 @@ import (
 	"github.com/smallnest/rpcx/log"
 	"github.com/smallnest/rpcx/server"
 	"github.com/smallnest/rpcx/serverplugin"
+	"net"
 	"os"
 	"strconv"
 	"time"
@@ -40,7 +41,27 @@ func (this *GappUser) getUser(ctx context.Context, request *io.Request, response
 		return err
 	}
 	log.Info("user ", user)
-	user.Password = "oko"
+	name, err := os.Hostname()
+	if err != nil {
+		log.Info("读取本机名异常", err)
+		name = err.Error()
+	}
+	name = "...host = [" + name + "]"
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		log.Info("读取本机ip异常", err)
+		name += "  " + err.Error()
+	}
+	name = name + "ip = ["
+	for _, value := range addrs {
+		if ipnet, ok := value.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				name += "(" + ipnet.IP.String() + ")"
+			}
+		}
+	}
+	name += "]"
+	user.Password = "oko" + name
 	response.Code = 0
 	response.Message = "正常请求"
 	response.Data = user
