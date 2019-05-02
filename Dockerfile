@@ -1,3 +1,3 @@
 FROM scratch
-ADD /gapp/gappuser/gappuser /
+ADD gappuser /
 CMD ["/gappuser"]
