@@ -39,7 +39,7 @@ func init() {
 		}
 	}
 
-	log.Infof("等待[%s]秒后准备初始化数据库表", isecond)
+	log.Infof("等待[%d]秒后准备初始化数据库表", isecond)
 	time.Sleep(time.Second * time.Duration(isecond))
 	ds := user + ":" + password + "@tcp(" + host + ")/" + dbName + "?charset=utf8mb4&loc=Local"
 	log.Info(ds)
